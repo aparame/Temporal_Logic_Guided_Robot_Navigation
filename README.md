@@ -5,7 +5,7 @@ See https://arxiv.org/pdf/1603.02650v1.pdf for details.
 # Installing Dependencies
 
 This code depends on YALMIP, which can be obtained with the Multi-Parametric Toolbox, or MPT3, 
-see http://control.ee.ethz.ch/~mpt/3/Main/Installation. MPT is also required for plotting polyhedras.
+see https://yalmip.github.io/tutorial/installation/. MPT is also required for plotting polyhedras.
 
 Computing robustness for the MTL specifications depends on the s-TaLiRo tool, which can be downloaded from
 https://sites.google.com/a/asu.edu/s-taliro/s-taliro/download
