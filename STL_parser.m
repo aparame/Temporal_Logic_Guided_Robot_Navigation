@@ -2,23 +2,20 @@
 
 %% STL specifications to Toolbox inputs %%
 
-% 
-%
-STL_1 = "alw ((ev_[00,10] (X(1:2,t) > [0.4;0.4] and X(1:2,t) < [0.5;0.5]))" + ...
-    "and (ev_[10,20] (X(1:2,t) > [0.8;0.6] and X(1:2,t) < [0.9;0.7]))";
+% STL_1 = "alw ((ev_[10,15] (X(1:2,t) > [0.3;0.5] and X(1:2,t) < [0.5;0.7])) and (ev_[20,25] (X(1:2,t) > [1.2;1.2] and X(1:2,t) < [1.4;1.4]))"
 
-STL_2 = "alw ((ev_[00,09] (X(1:2,t) > [0.4;0.4] and X(1:2,t) < [0.5;0.6]))" + ...
-    "and (ev_[15,25] (X(1:2,t) > [0.8;0.6] and X(1:2,t) < [0.9;0.8]))";
+%STL According to MILP_MTL example %
+% STL_2 = "alw ((ev_[10,15] (X(1:2,t) > [0.3;0.5] and X(1:2,t) < [0.5;0.7])) and X(1:2,t) >~ [1.0;1.2] and X(1:2,t) <~ [1.2;1.7])"
 
 
-[waypoints,time_stamp] = waypoint_locations(STL_2);
+% [waypoints,obstacles,time_stamp] = STL_parsers(STL_1);
 
 
 % [success,st1,st2,int] = parenthesis_split_balance(STL1,)
 
 %% Parse %%
 
-function [waypoints,time_stamps] = waypoint_locations(st)
+function [waypoints,obstacles,time_stamps] = STL_parser(st)
 
 % split st into st1 op st2 where st1 and st2 are parenthesisly balanced
 char = st.char();
@@ -28,12 +25,17 @@ start_idx_g = [];
 start_idx_l = [];
 waypoints_lower= [];
 waypoints_upper= [];
-start_idx_g = strfind(st,'>');
-start_idx_l = strfind(st,'<');
-time_start = strfind(st,'ev');
+obs_lower= [];
+obs_upper= [];
+start_idx_g = strfind(st,'> ');
+start_idx_l = strfind(st,'< ');
+start_idx_og = strfind(st,'>~');  %start_id_obstacle_greater
+start_idx_ol = strfind(st,'<~');  %start_id_obstacle_lesser
+times = strfind(st,'ev');
 
 
 waypoints = cell(numel(start_idx_g),1);
+obstacles = cell(numel(start_idx_og),1);
 
 
 for i = 1:numel(start_idx_g)
@@ -53,15 +55,50 @@ for i = 1:numel(start_idx_l)
     
 end
 
-for i = 1:numel(time_start)
-    time_stamp = char(time_start(i)+4:time_start(i)+8);
-    time_stamps = [time_stamps; time_stamp];
+for i = 1:numel(start_idx_og)
+    stlx = char(start_idx_og(i)+4:start_idx_og(i)+6);
+    stly = char(start_idx_og(i)+8:start_idx_og(i)+10);
+    obs_xl = str2double(stlx);
+    obs_yl = str2double(stly);
+    obs_lower = [obs_lower; obs_xl obs_yl];
+
+end
+for i = 1:numel(start_idx_ol)
+    stlx = char(start_idx_ol(i)+4:start_idx_ol(i)+6);
+    stly = char(start_idx_ol(i)+8:start_idx_ol(i)+10);
+    obs_xu = str2double(stlx);
+    obs_yu = str2double(stly);
+    obs_upper = [obs_upper; obs_xu obs_yu];
+
+end
+
+for i = 1:numel(times)
+    char_time = char(times(i)+4:times(i)+8)
+    time_start = str2double(char_time(1:2));
+    time_end = str2double(char_time(4:end));
+    time_stamps = [time_stamps; time_start time_end];
 
 end
 
 for i = 1:numel(start_idx_g)
     waypoints{i} = [waypoints_lower(i,:); waypoints_lower(i,1) waypoints_upper(i,2); waypoints_upper(i,:);waypoints_upper(i,1) waypoints_lower(i,2)];
-
+end
+for i = 1:numel(start_idx_og)
+     obstacles{i} = [obs_lower(i,:); obs_lower(i,1) obs_upper(i,2); obs_upper(i,:);obs_upper(i,1) obs_lower(i,2)];
 end
 
 end
+
+
+
+
+
+
+
+
+
+
+
+
+
+

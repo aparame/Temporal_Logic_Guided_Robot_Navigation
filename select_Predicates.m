@@ -22,10 +22,50 @@ function SP = select_Predicates(SP, userInput)
 
 
 str_name = ('a':'z').';
-
+SP.phi_not_global = '';
+SP.phi_global = '';
 
 if strcmp(userInput, 'custom')
-% STL Parser
+    % STL Parser
+    hfig  = figure;
+    hold on
+    axis([0 2 0 2]);
+    pos_init = input("Choose start location in [] format");
+    STL_spec = input("Type in the STL specifications:");
+    [waypoints,obstacles,times] = STL_parser(STL_spec);
+    times = times*SP.ds;
+    
+    SP.safe_num_known = height(waypoints); % No. of waypoints(known)
+    SP.unsafe_num_known = height(obstacles); % No. of obstacles(known)
+    SP.pred_known_sz = SP.safe_num_known+SP.unsafe_num_known; % Known regions
+    SP.pred_unknown_sz = 0;
+
+    
+    for i = 1:SP.safe_num_known
+        SP.pred(i).values = waypoints{i};
+        SP.pred(i).safe = 1;
+        SP.phi_not_global = strcat(SP.phi_not_global, '[]_[',num2str...
+            (times(2*i-1)), ',', num2str(times(2*i)),']', str_name(i));
+        if i ~= SP.safe_num_known
+            SP.phi_not_global = strcat(SP.phi_not_global, ' /\ ');
+        end
+    end
+    for i = SP.safe_num_known+1: SP.pred_known_sz
+        % Known Obstacle
+        SP.pred(i).values = obstacles{i-SP.safe_num_known};
+        SP.pred(i).safe = -1;
+        SP.phi_global = strcat(SP.phi_global, '[]!', str_name(i));
+         if i ~= (SP.safe_num_known + SP.unsafe_num_known)
+            SP.phi_global = strcat(SP.phi_global, ' /\ ');
+        end
+    
+    end
+    SP.tf = times(end);
+    SP.pred_hor = SP.tf/SP.ds;
+
+    SP.phi_global = '';
+    SP.phi_global = '[]!b';
+    SP.phi_global_unknown(1).str = '[]!c';
 
 elseif ~strcmp(userInput,'yes')    
     
@@ -183,13 +223,13 @@ else
             %             sprintf('Select the next unknown unsafe Set.')
         end
         
-        [xpos, ypos] = ginputc('FigHandle', hfig, 'PointColor', [0.75 0 0], ...
-            'Color', [0.75 0 0], 'LineWidth', 2, 'ShowPoints', true, ...
+        [xpos, ypos] = ginputc('FigHandle', hfig, 'PointColor', [0 0 0], ...
+            'Color', [0 0 0], 'LineWidth', 2, 'ShowPoints', true, ...
             'ConnectPoints', true);
         
         SP.pred(jj).values = [xpos ypos];
         SP.pred(jj).safe = -1;
-        fill(SP.pred(jj).values(:,1), SP.pred(jj).values(:,2) ,  [0.75 0 0]);
+        fill(SP.pred(jj).values(:,1), SP.pred(jj).values(:,2) ,  [0 0 0]);
         
         SP.phi_global_unknown(jj-SP.pred_known_sz).str = strcat('[]!', ...
             str_name(jj));
@@ -198,8 +238,8 @@ else
     
 end
 
+
 for ii = 1:(SP.pred_known_sz+SP.pred_unknown_sz)
-    
     SP.pred(ii).str = str_name(ii);
     [SP.pred(ii).A, SP.pred(ii).b] = pts2cvxpoly(SP.pred(ii).values);
     
@@ -208,6 +248,5 @@ end
 SP.phi_orig = [SP.phi_not_global '/\' SP.phi_global];
 SP.x0(1:2) = pos_init; % SP.x0 = [x-pos y-pos x-dot y-dot]'
 SP.hfig = hfig;
-
 
 end
