@@ -94,7 +94,7 @@ delete(hfig);
 
 hfig = figure;
 hold on;
-axis([-0.8 0.8 -0.6 0.6]);
+axis([0 2 0 2]);
 
 
 Z = sdpvar(SP.n_outputs,1);
