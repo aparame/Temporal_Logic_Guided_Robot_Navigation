@@ -18,9 +18,14 @@ The user-interactive example also uses a customized ginput.m file by Jiro Doke (
 
 # Example
 
-Once everything is installed, you can run the file 'find_OptimalTraj_mpc_m3pi.m' and choose either to run the in-built 
-example or provide a reach-avoid MTL specification of your choice.
+Once everything is installed, you can run the file 'find_OptimalTraj_mpc_m3pi.m' and choose either 
+
+1) Type 'yes' to use a GUI to give inputs to waypoints and obstacles
+2) Type 'custom' to give a custom STL specification
+    # Example : "alw ((ev_[10,12] (X(1:2,t) > [0.3;0.5] and X(1:2,t) < [0.5;0.7])) and X(1:2,t) >~ [1.0;1.0] and X(1:2,t) <~ [1.2;1.4])" 
+    This specification is a standard Go-To-Goal specifcation with goal region diagonal vertices being [0.3,0.5] and [0.5,0.7] and the obstacle co-ordinates being [1.0,1.0] and [1.2,1.4]
+
 
 # Contact Us
 
-You can contact sayan.jubiee@gmail.com for any queries or to report any bugs in the code.
+You can contact aparame@clemson.edu for any queries or to report any bugs in the code.
