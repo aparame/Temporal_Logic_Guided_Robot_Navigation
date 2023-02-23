@@ -94,8 +94,8 @@ delete(hfig);
 
 hfig = figure;
 hold on;
-axis([0 2 0 2]);
-
+% axis([0 2 0 2]);
+axis([-0.8 0.8 -0.6 0.6]);
 
 Z = sdpvar(SP.n_outputs,1);
 for ii = 1:SP.pred_known_sz
@@ -165,5 +165,60 @@ argvout.SP.yout = SP.yout;
 argvout.SP.dmin_con = SP.dmin_con;
 argvout.SP.tmin_con = SP.tmin_con;
 
-
 save('verification_data3.mat','uvals','xvals','yvals');
+
+%% Breach Verification %%
+% Get the Predicate form Ax <= b from the unsafe regions and use LSQLIN to
+% find the closest XY coodinates on the unsafe set from  the generated
+% trajectory, then calculate the min_distance
+
+fields = fieldnames(SP.pred);
+A_array = zeros(4,1);
+b_array = zeros(4,1);
+for i = 1:length(SP.pred)
+    if getfield(SP.pred(i),fields{2}) == -1
+        A_array = getfield(SP.pred(i),fields{4});
+        b_array = getfield(SP.pred(i),fields{5});
+    end
+end
+
+X = xvals(1,:); Y = xvals(2,:);
+min_d = zeros(1,length(xvals));
+min_XY = zeros(2,length(xvals));
+options = optimoptions('lsqlin','Display','off');
+for ii = 1:length(xvals)
+    min_XY = lsqlin(speye(4,2),[X(ii);Y(ii);X(ii);Y(ii)],A_array,b_array,[],[],[],[],[],options);
+    min_d(ii) = pdist([min_XY';X(ii),Y(ii)],'euclidean');
+end
+%
+% Initiate Breach Parameters to check safety property %
+
+
+Bdata = BreachTraceSystem({'min_d'});
+min_d = reshape(min_d,[1,length(SP.times)]);
+trace = [SP.times',min_d'];
+Bdata.AddTrace(trace);
+phi = STL_Formula('phi','alw (min_d[t] > 0.05)');
+Rphi = BreachRequirement(phi);
+min_rob = Rphi.Eval(Bdata);
+
+
+% Plotting %
+figure(2)
+dim = [0.15,0.7,0.1,0.1];
+
+plot(min_d,'LineWidth',1.5)
+ylim([-0.5,2]);
+hold on
+plot(xlim, [1 1]*0.05, '--k','LineWidth',1.5)
+str = sprintf('Min Robustness: %.4f', min_rob);
+annotation('textbox',dim,'String',str,'FitBoxToText','on');
+hold off
+
+
+
+
+
+
+
+
