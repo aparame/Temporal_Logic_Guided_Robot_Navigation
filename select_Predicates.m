@@ -33,7 +33,7 @@ if strcmp(userInput, 'custom')
     pos_init = input("Choose start location in [] format");
     STL_spec = input("Type in the STL specifications:");
     [waypoints,obstacles,times] = STL_parser(STL_spec);
-    times = times*SP.ds;
+%     times = times*SP.ds;
     
     SP.safe_num_known = height(waypoints); % No. of waypoints(known)
     SP.unsafe_num_known = height(obstacles); % No. of obstacles(known)

@@ -2,7 +2,7 @@
 
 %% STL specifications to Toolbox inputs %%
 
-% STL_1 = "alw ((ev_[10,15] (X(1:2,t) > [0.3;0.5] and X(1:2,t) < [0.5;0.7])) and (ev_[20,25] (X(1:2,t) > [1.2;1.2] and X(1:2,t) < [1.4;1.4]))"
+% STL_1 = "alw ((ev_[10,12] (X(1:2,t) > [0.3;0.5] and X(1:2,t) < [0.5;0.7])) and (ev_[25,27] (X(1:2,t) > [1.2;1.2] and X(1:2,t) < [1.4;1.4]))"
 
 %STL According to MILP_MTL example %
 % STL_2 = "alw ((ev_[10,15] (X(1:2,t) > [0.3;0.5] and X(1:2,t) < [0.5;0.7])) and X(1:2,t) >~ [1.0;1.2] and X(1:2,t) <~ [1.2;1.7])"
