@@ -27,13 +27,13 @@ SP.phi_global = '';
 
 if strcmp(userInput, 'custom')
     % STL Parser
-    hfig  = figure;
-    hold on
-    axis([0 2 0 2]);
+    
+%     hold on
+%     axis([0 2 0 2]);
     pos_init = input("Choose start location in [] format");
     STL_spec = input("Type in the STL specifications:");
     [waypoints,obstacles,times] = STL_parser(STL_spec);
-%     times = times*SP.ds;
+%     times = times(:)*SP.ds;
     
     SP.safe_num_known = height(waypoints); % No. of waypoints(known)
     SP.unsafe_num_known = height(obstacles); % No. of obstacles(known)
@@ -50,6 +50,7 @@ if strcmp(userInput, 'custom')
             SP.phi_not_global = strcat(SP.phi_not_global, ' /\ ');
         end
     end
+
     for i = SP.safe_num_known+1: SP.pred_known_sz
         % Known Obstacle
         SP.pred(i).values = obstacles{i-SP.safe_num_known};
@@ -58,14 +59,15 @@ if strcmp(userInput, 'custom')
          if i ~= (SP.safe_num_known + SP.unsafe_num_known)
             SP.phi_global = strcat(SP.phi_global, ' /\ ');
         end
-    
+        SP.phi_global = strcat(SP.phi_global, '[]!', str_name(i));
+        if i ~= (SP.safe_num_known + SP.unsafe_num_known)
+            SP.phi_global = strcat(SP.phi_global, ' /\ ');
+        end
     end
     SP.tf = times(end);
     SP.pred_hor = SP.tf/SP.ds;
 
-    SP.phi_global = '';
-    SP.phi_global = '[]!b';
-    SP.phi_global_unknown(1).str = '[]!c';
+    
 
 elseif ~strcmp(userInput,'yes')    
     
@@ -114,7 +116,7 @@ else
     
     SP.safe_num_known = input('\n\n How many known safe sets do you want to choose? ');
     timeStamps = input('\n\n Enter the time-points during which you want to be in the \n safe sets in ascending manner such that the first value \n is when you enter the set and the second value is when you leave the set. ');
-    timeStamps = timeStamps(:)*SP.ds;
+    timeStamps = timeStamps(:)*SP.ds
     temp = sort(timeStamps, 'ascend');
     
     if size(timeStamps,1) ~= SP.safe_num_known*2
@@ -244,7 +246,7 @@ for ii = 1:(SP.pred_known_sz+SP.pred_unknown_sz)
     [SP.pred(ii).A, SP.pred(ii).b] = pts2cvxpoly(SP.pred(ii).values);
     
 end
-
+hfig  = figure;
 SP.phi_orig = [SP.phi_not_global '/\' SP.phi_global];
 SP.x0(1:2) = pos_init; % SP.x0 = [x-pos y-pos x-dot y-dot]'
 SP.hfig = hfig;

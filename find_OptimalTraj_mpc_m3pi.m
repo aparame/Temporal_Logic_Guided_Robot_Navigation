@@ -94,8 +94,8 @@ delete(hfig);
 
 hfig = figure;
 hold on;
-% axis([0 2 0 2]);
-axis([-0.8 0.8 -0.6 0.6]);
+axis([0 2 0 2]);
+% axis([-0.8 0.8 -0.6 0.6]);
 
 Z = sdpvar(SP.n_outputs,1);
 for ii = 1:SP.pred_known_sz
@@ -204,8 +204,8 @@ min_rob = Rphi.Eval(Bdata);
 
 
 % Plotting %
-figure(2)
-dim = [0.15,0.7,0.1,0.1];
+figure(3)
+dim = [0.55,0.7,0.1,0.1];
 
 plot(min_d,'LineWidth',1.5)
 ylim([-0.5,2]);
