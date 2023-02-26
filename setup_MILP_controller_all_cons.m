@@ -39,6 +39,7 @@ function controller = setup_MILP_controller_all_cons(SP)
     
     % add bounds on control input signal as constraints
     constraints = [constraints, SP.u0.min(:,k) <= u{k} <= SP.u0.max(:,k)];
+    constraints = [constraints, [-2;-2;-10000;-10000] <= x{k} <= [2;2;10000;10000] ];
     
     
     % set control value to zero for time-points beyond remaining horizon length
