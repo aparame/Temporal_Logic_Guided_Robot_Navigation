@@ -1,6 +1,6 @@
 # MILP-MTL
 An MILP Approach for Real-time Optimal Controller Synthesis with Metric Temporal Logic Specifications
-See https://arxiv.org/pdf/1603.02650v1.pdf for details.
+
 
 # Installing Dependencies
 
@@ -34,3 +34,10 @@ Once everything is installed, you can run the file 'find_OptimalTraj_mpc_m3pi.m'
 # Contact Us
 
 You can contact aparame@clemson.edu for any queries or to report any bugs in the code.
+If you feel like using our work, please cite us at :
+@techreport{parameshwaran2023safety,
+  title={Safety Verification and Navigation for Autonomous Vehicles Based on Signal Temporal Logic Constraints},
+  author={Parameshwaran, Aditya and Wang, Yue},
+  year={2023},
+  institution={SAE Technical Paper}
+}
