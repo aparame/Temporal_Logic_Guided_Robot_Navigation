@@ -35,10 +35,13 @@ Once everything is installed, you can run the file 'find_OptimalTraj_mpc_m3pi.m'
 
 You can contact aparame@clemson.edu for any queries or to report any bugs in the code.
 If you feel like using our work, please cite us at :
-\cite{@techreport{parameshwaran2023safety,
+
+```
+@techreport{parameshwaran2023safety,
   title={Safety Verification and Navigation for Autonomous Vehicles Based on Signal Temporal Logic Constraints},
   author={Parameshwaran, Aditya and Wang, Yue},
   year={2023},
   institution={SAE Technical Paper}
-}}
-
+}
+```
+**Parameshwaran, Aditya**, and Yue Wang. Safety Verification and Navigation for Autonomous Vehicles Based on Signal Temporal Logic Constraints. No. 2023-01-0113. SAE Technical Paper, 2023.
