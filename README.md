@@ -1,4 +1,4 @@
-# Temporal Logic Guided Robot Navigation
+# Temporal Logic Guided Robot Navigation (TLG-RN)
 An MILP Approach for Real-time Optimal Controller Synthesis with Signal Temporal Logic Specifications
 
 
