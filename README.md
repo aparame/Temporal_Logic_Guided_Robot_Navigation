@@ -1,5 +1,5 @@
-# MILP-MTL
-An MILP Approach for Real-time Optimal Controller Synthesis with Metric Temporal Logic Specifications
+# Temporal Logic Guided Robot Navigation
+An MILP Approach for Real-time Optimal Controller Synthesis with Signal Temporal Logic Specifications
 
 
 # Installing Dependencies
